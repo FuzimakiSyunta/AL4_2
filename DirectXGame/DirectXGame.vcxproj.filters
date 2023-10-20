@@ -69,6 +69,15 @@
     <ClCompile Include="2d\ImGuiManager.cpp">
       <Filter>ソース ファイル\2d</Filter>
     </ClCompile>
+    <ClCompile Include="Ground.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Skydome.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3d\ViewProjection.h">
@@ -113,9 +122,6 @@
     <ClInclude Include="base\DirectXCommon.h">
       <Filter>ヘッダー ファイル\base</Filter>
     </ClInclude>
-    <ClInclude Include="base\SafeDelete.h">
-      <Filter>ヘッダー ファイル\base</Filter>
-    </ClInclude>
     <ClInclude Include="base\TextureManager.h">
       <Filter>ヘッダー ファイル\base</Filter>
     </ClInclude>
@@ -156,6 +162,18 @@
       <Filter>ヘッダー ファイル\2d</Filter>
     </ClInclude>
     <ClInclude Include="base\StringUtility.h">
+      <Filter>ヘッダー ファイル\base</Filter>
+    </ClInclude>
+    <ClInclude Include="Ground.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Skydome.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="SafeDelete.h">
       <Filter>ヘッダー ファイル\base</Filter>
     </ClInclude>
   </ItemGroup>
