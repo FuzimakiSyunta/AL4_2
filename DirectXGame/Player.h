@@ -1,6 +1,6 @@
-﻿
-#include "Model.h"
+﻿#include "Model.h"
 #include "WorldTransform.h"
+#include<Input.h>
 class Player {
 public:
 	/// <summary>
