@@ -1,4 +1,4 @@
-#include "Matrix4x4.h"
+ï»¿#include "Matrix4x4.h"
 #include "Vector3.h"
 #define _USE_MATH_DEFINES
 #include "keisan.h"
@@ -70,7 +70,7 @@ Matrix4x4 MakeRotateXMatrix(float radian) {
 	return result;
 }
 
-// 2.Y²‰ñ“]s—ñ
+// 2.Yè»¸å›è»¢è¡Œåˆ—
 Matrix4x4 MakeRotateYMatrix(float radian) {
 	Matrix4x4 result = {0};
 	result.m[0][0] = cosf(radian);
@@ -82,7 +82,7 @@ Matrix4x4 MakeRotateYMatrix(float radian) {
 	return result;
 };
 
-// 3.Z²‰ñ“]s—ñ
+// 3.Zè»¸å›è»¢è¡Œåˆ—
 Matrix4x4 MakeRotateZMatrix(float radian) {
 	Matrix4x4 result = {0};
 	result.m[0][0] = cosf(radian);
