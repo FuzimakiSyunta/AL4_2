@@ -35,6 +35,13 @@ void GameScene::Initialize() {
 	// 自キャラの初期化
 	player_->Initialize(playerModel_.get());
 
+	// 天球の生成
+	skydome_ = std::make_unique<Skydome>();
+	// 3Dモデルの生成
+	skydomeModel_.reset(Model::CreateFromOBJ("skydome", true));
+	// 天球の初期化
+	skydome_->Initialize(skydomeModel_.get());
+
 
 
 	//// 追従カメラの生成

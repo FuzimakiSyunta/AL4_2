@@ -8,6 +8,7 @@
 #include "Input.h"
 #include "Model.h"
 #include "Player.h"
+#include "Skydome.h"
 #include "SafeDelete.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
