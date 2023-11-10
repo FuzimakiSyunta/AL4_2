@@ -1,10 +1,10 @@
-#pragma once
-class FollowCamera
-{
-public:
-	///‰Šú‰»
-	void Initialize();
-	//XV
-	void Update();
-	
-};
+ï»¿//#pragma once
+//class FollowCamera
+//{
+//public:
+//	///åˆæœŸåŒ–
+//	void Initialize();
+//	//æ›´æ–°
+//	void Update();
+//	
+//};

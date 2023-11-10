@@ -66,6 +66,11 @@ private: // メンバ変数
 	// 地面
 	std::unique_ptr<Ground> ground_;
 
+	// 3Dモデル
+	std::unique_ptr<Model> skydomeModel_ = nullptr;
+	// 天球
+	std::unique_ptr<Skydome> skydome_;
+
 	//// 追従カメラ
 	//std::unique_ptr<FollowCamera> followCamera_;
 
