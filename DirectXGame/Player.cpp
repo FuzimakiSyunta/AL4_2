@@ -30,7 +30,7 @@ void Player::Update()
 
 	};
 	//行列の更新
-	worldTransform_.TransferMatrix();
+	worldTransform_.UpdateMatrix();
 }
 
 void Player::Draw(ViewProjection& viewProjection) { model_->Draw(worldTransform_, viewProjection); }
