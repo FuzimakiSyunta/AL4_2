@@ -71,8 +71,8 @@ private: // メンバ変数
 	// 天球
 	std::unique_ptr<Skydome> skydome_;
 
-	//// 追従カメラ
-	//std::unique_ptr<FollowCamera> followCamera_;
+	// 追従カメラ
+	std::unique_ptr<FollowCamera> followCamera_;
 
 
 	/// <summary>

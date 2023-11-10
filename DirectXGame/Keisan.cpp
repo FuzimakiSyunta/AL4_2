@@ -51,11 +51,13 @@ float Length(Vector3 v) {
 }
 
 Vector3 Normalize(const Vector3& v) {
-	Vector3 result;
-	result.x = v.x / Length(v);
-	result.y = v.y / Length(v);
-	result.z = v.z / Length(v);
-
+	float len = Length(v);
+	Vector3 result = v;
+	if (len != 0) {
+		result.x /= len;
+		result.y /= len;
+		result.z /= len;
+	}
 	return result;
 }
 

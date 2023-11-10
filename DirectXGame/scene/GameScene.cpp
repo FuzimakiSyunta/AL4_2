@@ -30,8 +30,7 @@ void GameScene::Initialize() {
 	// 自キャラの生成
 	player_ = std::make_unique<Player>();
 	// 3Dモデルの生成
-	playerModel_.reset(Model::CreateFromOBJ("Player", true));
-
+	playerModel_.reset(Model::CreateFromOBJ("player", true));
 	// 自キャラの初期化
 	player_->Initialize(playerModel_.get());
 
@@ -42,16 +41,14 @@ void GameScene::Initialize() {
 	// 天球の初期化
 	skydome_->Initialize(skydomeModel_.get());
 
+	// 追従カメラの生成
+	followCamera_ = std::make_unique<FollowCamera>();
+	followCamera_->Initialize();
 
-
-	//// 追従カメラの生成
-	//followCamera_ = std::make_unique<FollowCamera>();
-	//followCamera_->Initialize();
-
-	//// 自キャラのワールドトランスフォームを追従カメラにセット
-	//followCamera_->SetTarget(&player_->GetWorldTransform());
-	//// Player&followCamera
-	//player_->SetViewProjection(&followCamera_->GetViewProjection());
+	// 自キャラのワールドトランスフォームを追従カメラにセット
+	followCamera_->SetTarget(&player_->GetWorldTransform());
+	// Player&followCamera
+	player_->SetViewProjection(&followCamera_->GetViewProjection());
 
 	// 地面の生成
 	ground_ = std::make_unique<Ground>();
@@ -66,12 +63,14 @@ void GameScene::Initialize() {
 void GameScene::Update() {
 	player_->Update();
 	debugCamera_->Update();
+	ground_->Update();
 	// 追従カメラの更新
-	//followCamera_->Update();
+	followCamera_->Update();
+	skydome_ -> Update();
 	
 
-	/*viewProjection_.matProjection = followCamera_->GetViewProjection().matProjection;
-	viewProjection_.matView = followCamera_->GetViewProjection().matView;*/
+	viewProjection_.matProjection = followCamera_->GetViewProjection().matProjection;
+	viewProjection_.matView = followCamera_->GetViewProjection().matView;
 
 #ifdef _DEBUG
 	if (input_->TriggerKey(DIK_C)) {
@@ -118,6 +117,7 @@ void GameScene::Draw() {
 	/// </summary>
 	player_->Draw(viewProjection_);
 	ground_->Draw(viewProjection_);
+	skydome_->Draw(viewProjection_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();

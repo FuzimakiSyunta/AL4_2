@@ -19,7 +19,15 @@ public:
 	/// </summary>
 	void Draw(ViewProjection& viewProjection);
 
+	WorldTransform& GetWorldTransform() { return worldTransform_; };
+
+	void SetViewProjection(const ViewProjection* viewProjection) {
+		viewProjection_ = viewProjection;
+	}
+
 private:
 	WorldTransform worldTransform_;
+	// ビュープロジェクション
+	const ViewProjection* viewProjection_ = nullptr;
 	Model* model_ = nullptr;
 };
