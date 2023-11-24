@@ -53,7 +53,7 @@ private: // メンバ変数
 	std::unique_ptr<Model> model_ = nullptr;
 
 	// 3Dモデル
-	/*std::unique_ptr<Model> playerModel_ = nullptr;*/
+	std::unique_ptr<Model> playerModel_ = nullptr;
 	std::unique_ptr<Model> modelFighterBody_;
 	std::unique_ptr<Model> modelFighterHead_;
 	std::unique_ptr<Model> modelFighterL_arm_;

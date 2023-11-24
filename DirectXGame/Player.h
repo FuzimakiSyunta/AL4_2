@@ -21,7 +21,10 @@ public:
 	/// </summary>
 	void Draw(ViewProjection& viewProjection);
 
-	WorldTransform& GetWorldTransform() { return worldTransformBody_, };
+	WorldTransform& GetWorldTransform() {
+		return worldTransform_,worldTransformBody_, worldTransformHead_, worldTransformL_arm,
+		       worldTransformR_arm;
+	};
 
 	void SetViewProjection(const ViewProjection* viewProjection) {
 		viewProjection_ = viewProjection;
@@ -33,6 +36,7 @@ public:
 	void UpdateFloatingGimmick();
 
 private:
+	WorldTransform worldTransform_;
 	WorldTransform worldTransformBody_;
 	WorldTransform worldTransformHead_;
 	WorldTransform worldTransformL_arm;

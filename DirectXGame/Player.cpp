@@ -7,10 +7,28 @@ void Player::Initialize(Model* modelBody, Model* modelHead, Model* modelL_arm, M
 	model_ = modelFighterHead_;
 	model_ = modelFighterL_arm;
 	model_ = modelFighterR_arm;
+	//初期化
+	worldTransform_.Initialize();
 	worldTransformBody_.Initialize();
-	worldTransform_.scale_ = {1.0f, 1.0f, 1.0f};
-	worldTransform_.rotation_ = {0.0f, 0.0f, 0.0f};
-	worldTransform_.translation_ = {0.0f, -1.0f, 0.0f};
+	worldTransformHead_.Initialize();
+	worldTransformL_arm.Initialize();
+	worldTransformR_arm.Initialize();
+	//体の初期化
+	worldTransformBody_.scale_ = {1.0f, 1.0f, 1.0f};
+	worldTransformBody_.rotation_ = {0.0f, 0.0f, 0.0f};
+	worldTransformBody_.translation_ = {0.0f, -1.0f, 0.0f};
+	//頭の初期化
+	worldTransformHead_.scale_ = {1.0f, 1.0f, 1.0f};
+	worldTransformHead_.rotation_ = {0.0f, 0.0f, 0.0f};
+	worldTransformHead_.translation_ = {0.0f, -1.0f, 0.0f};
+	//左腕の初期化
+	worldTransformL_arm.scale_ = {1.0f, 1.0f, 1.0f};
+	worldTransformL_arm.rotation_ = {0.0f, 0.0f, 0.0f};
+	worldTransformL_arm.translation_ = {0.0f, -1.0f, 0.0f};
+	// 右腕の初期化
+	worldTransformR_arm.scale_ = {1.0f, 1.0f, 1.0f};
+	worldTransformR_arm.rotation_ = {0.0f, 0.0f, 0.0f};
+	worldTransformR_arm.translation_ = {0.0f, -1.0f, 0.0f};
 }
 void Player::InitializeFloatingGimmick() { 
 	floatingParamerer_ = 0.0f; }
@@ -46,26 +64,47 @@ void Player::Update()
 		//移動量に速さを反映
 		move = VectorMultiply(speed, Normalize(move));
 		//移動
-		worldTransform_.translation_=Add(worldTransform_.translation_,move);
+		worldTransformBody_.translation_ = Add(worldTransformBody_.translation_, move);
+		worldTransformHead_.translation_ = Add(worldTransformHead_.translation_, move);
+		worldTransformL_arm.translation_ = Add(worldTransformL_arm.translation_, move);
+		worldTransformR_arm.translation_ = Add(worldTransformR_arm.translation_, move);
 	    // カメラの角度から回転行列を計算する
 		 Matrix4x4 rotateYMatrix = MakeRotateYMatrix(viewProjection_->rotation_.y);
 		// カメラとリンク
 		move = TransformNormal(move, MakeRotateYMatrix(viewProjection_->rotation_.y));
 	
 		if (move.z != 0 || move.y != 0) {
-			worldTransform_.rotation_.y = std::atan2(move.x, move.z);
+			worldTransformBody_.rotation_.y = std::atan2(move.x, move.z);
+			worldTransformHead_.rotation_.y = std::atan2(move.x, move.z);
+			worldTransformL_arm.rotation_.y = std::atan2(move.x, move.z);
+			worldTransformR_arm.rotation_.y = std::atan2(move.x, move.z);
 		}
 
-		worldTransform_.translation_ = Add(worldTransform_.translation_, move);
+		worldTransformBody_.translation_ = Add(worldTransformBody_.translation_, move);
+		worldTransformHead_.translation_ = Add(worldTransformHead_.translation_, move);
+		worldTransformL_arm.translation_ = Add(worldTransformL_arm.translation_, move);
+		worldTransformR_arm.translation_ = Add(worldTransformR_arm.translation_, move);
+
+		worldTransformBody_.rotation_.y = std::atan2(move.x, move.z);
+		worldTransformHead_.rotation_.y = std::atan2(move.x, move.z);
+		worldTransformL_arm.rotation_.y = std::atan2(move.x, move.z);
+		worldTransformR_arm.rotation_.y = std::atan2(move.x, move.z);
+
 
 	};
 
 	// 行列の更新
-	worldTransform_.UpdateMatrix();
+	worldTransformBody_.UpdateMatrix();
+	worldTransformHead_.UpdateMatrix();
+	worldTransformL_arm.UpdateMatrix();
+	worldTransformR_arm.UpdateMatrix();
 }
 
 void Player::Draw(ViewProjection& viewProjection) 
 {
-	model_->Draw(worldTransform_, viewProjection); 
+	model_->Draw(worldTransformBody_, viewProjection); 
+	model_->Draw(worldTransformHead_, viewProjection);
+	model_->Draw(worldTransformL_arm, viewProjection);
+	model_->Draw(worldTransformR_arm, viewProjection);
 }
 
