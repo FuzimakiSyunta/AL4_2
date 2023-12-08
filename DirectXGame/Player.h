@@ -22,8 +22,7 @@ public:
 	void Draw(ViewProjection& viewProjection);
 
 	WorldTransform& GetWorldTransform() {
-		return worldTransform_,worldTransformBody_, worldTransformHead_, worldTransformL_arm,
-		       worldTransformR_arm;
+		return worldTransform_;
 	};
 
 	void SetViewProjection(const ViewProjection* viewProjection) {

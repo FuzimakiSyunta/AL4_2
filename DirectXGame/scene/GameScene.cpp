@@ -27,6 +27,9 @@ void GameScene::Initialize() {
 	// 軸方向表示が参照するビュープロジェクションを指定する(アドレス渡し)
 	AxisIndicator::GetInstance()->SetTargetViewProjection(&viewProjection_);
 
+	// 追従カメラの生成
+	followCamera_ = std::make_unique<FollowCamera>();
+	followCamera_->Initialize();
 	// 自キャラの生成
 	player_ = std::make_unique<Player>();
 	// 3Dモデルの生成
@@ -34,6 +37,10 @@ void GameScene::Initialize() {
 	modelFighterHead_.reset(Model::CreateFromOBJ("float_Head", true));
 	modelFighterL_arm_.reset(Model::CreateFromOBJ("float_L_arm", true));
 	modelFighterR_arm_.reset(Model::CreateFromOBJ("float_R_arm", true));
+	// 自キャラのワールドトランスフォームを追従カメラにセット
+	followCamera_->SetTarget(&player_->GetWorldTransform());
+	// Player&followCamera
+	player_->SetViewProjection(&followCamera_->GetViewProjection());
 	// 自キャラの初期化
 	player_->Initialize(
 	    modelFighterBody_.get(), modelFighterHead_.get(), modelFighterL_arm_.get(),
@@ -46,14 +53,7 @@ void GameScene::Initialize() {
 	// 天球の初期化
 	skydome_->Initialize(skydomeModel_.get());
 
-	// 追従カメラの生成
-	followCamera_ = std::make_unique<FollowCamera>();
-	followCamera_->Initialize();
 
-	// 自キャラのワールドトランスフォームを追従カメラにセット
-	followCamera_->SetTarget(&player_->GetWorldTransform());
-	// Player&followCamera
-	player_->SetViewProjection(&followCamera_->GetViewProjection());
 
 	// 地面の生成
 	ground_ = std::make_unique<Ground>();
