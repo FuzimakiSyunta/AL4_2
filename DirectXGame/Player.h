@@ -3,23 +3,24 @@
 #define _USE_MATH_DEFINES
 #include<math.h>
 #include<Input.h>
-class Player {
+#include<BaseCharacter.h>
+
+class Player:public BaseCharacter {
 public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(Model* modelBody,Model*modelHead,Model*modelL_arm,Model*modelR_arm);
+	virtual void Initialize(const std::vector<Model*>& models)override;
 
 	/// <summary>
-	/// 自キャラ
 	/// 更新
 	/// </summary>
-	void Update();
+	virtual void Update()override;
 
 	/// <summary>
 	/// 描画
 	/// </summary>
-	void Draw(ViewProjection& viewProjection);
+	virtual void Draw(const ViewProjection& viewProjection)override;
 
 	WorldTransform& GetWorldTransform() {
 		return worldTransform_;
