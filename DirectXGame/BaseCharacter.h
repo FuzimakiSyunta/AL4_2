@@ -1,4 +1,5 @@
-﻿#include"Model.h"
+﻿#pragma once
+#include"Model.h"
 
 class BaseCharacter {
 public:

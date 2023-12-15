@@ -29,6 +29,19 @@ void Enemy::Initialize(const std::vector<Model*>& models) {
 void Enemy::Update() {
 	// 基底クラスの更新
 	BaseCharacter::Update();
+
+	worldTransformBody_.parent_ = &worldTransform_;
+	worldTransformL_arm.parent_ = &worldTransform_;
+	worldTransformR_arm.parent_ = &worldTransform_;
+	// 速度
+	Vector3 move = {0, 0, 1};
+	
+	move = TransformNormal(move,worldTransform_.matWorld_);
+
+	worldTransform_.translation_ = Add(worldTransform_.translation_, move);
+
+	worldTransform_.rotation_.y += 0.05f;
+
 	// 行列の更新
 	worldTransform_.UpdateMatrix();
 	worldTransformBody_.UpdateMatrix();

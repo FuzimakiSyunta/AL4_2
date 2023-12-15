@@ -1,12 +1,13 @@
 ﻿#include "BaseCharacter.h"
 #include "Model.h"
 #include "WorldTransform.h"
+#include "Keisan.h"
 
 class Enemy : public BaseCharacter {
 public:
 	// デストラクタ
 
-		/// <summary>
+	/// <summary>
 	/// 初期化
 	/// </summary>
 	void Initialize(const std::vector<Model*>& models) override;
@@ -30,4 +31,5 @@ private:
 	Model* model_ = nullptr;
 	// 3Dモデル
 	Model* modelEnemy_;
+	
 };
