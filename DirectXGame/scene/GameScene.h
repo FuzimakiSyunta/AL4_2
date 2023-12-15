@@ -13,6 +13,7 @@
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
+#include "Enemy.h"
 
 /// <summary>
 /// ゲームシーン
@@ -61,6 +62,15 @@ private: // メンバ変数
 	
 	// 自キャラ
 	std::unique_ptr<Player> player_;
+
+	// 3Dモデル
+	std::unique_ptr<Model> enemyModel_ = nullptr;
+	std::unique_ptr<Model> modelEnemyBody_;
+	std::unique_ptr<Model> modelEnemyL_arm_;
+	std::unique_ptr<Model> modelEnemyR_arm_;
+
+	// 敵キャラ
+	std::unique_ptr<Enemy> enemy_;
 
 	// デバックカメラ
 	std::unique_ptr<DebugCamera> debugCamera_;

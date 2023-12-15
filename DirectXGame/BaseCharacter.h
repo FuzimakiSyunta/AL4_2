@@ -1,34 +1,29 @@
-#include"Model.h"
+ï»¿#include"Model.h"
 
 class BaseCharacter {
 public:
-	// ƒfƒXƒgƒ‰ƒNƒ^
+	// ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 
 	/// <summary>
-	/// ‰Šú‰»
+	/// åˆæœŸåŒ–
 	/// </summary>
 	virtual void Initialize(const std::vector<Model*>& models);
 
 	/// <summary>
-	/// XV
+	/// æ›´æ–°
 	/// </summary>
 	virtual void Update();
 
 	/// <summary>
-	/// •`‰æ
+	/// æç”»
 	/// </summary>
 	virtual void Draw(const ViewProjection& viewProjection);
 
 	const WorldTransform& GetWorldTransform() { return worldTransform_; }
 
 protected:
-	//ƒ‚ƒfƒ‹ƒf[ƒ^”z—ñ
+	//ãƒ¢ãƒ‡ãƒ«ãƒ‡ãƒ¼ã‚¿é…åˆ—
 	std::vector<Model*> models_;
-	//ƒ[ƒ‹ƒh•ÏŠ·ƒf[ƒ^
+	//ãƒ¯ãƒ¼ãƒ«ãƒ‰å¤‰æ›ãƒ‡ãƒ¼ã‚¿
 	WorldTransform worldTransform_;
-
-private:
-
-	
-
 };

@@ -2,12 +2,13 @@
 #include"Keisan.h"
 
 
-void Player::Initialize(Model* modelBody, Model* modelHead, Model* modelL_arm, Model* modelR_arm) {
-
-	modelFighterBody_ = modelBody;
+void Player::Initialize(const std::vector<Model*>& models) {
+	//基底クラスの初期化
+	BaseCharacter::Initialize(models);
+	/*modelFighterBody_ = modelBody;
 	modelFighterHead_ = modelHead;
 	modelFighterL_arm = modelL_arm;
-	modelFighterR_arm = modelR_arm;
+	modelFighterR_arm = modelR_arm;*/
 
 	// 初期化
 	worldTransform_.Initialize();
@@ -15,7 +16,7 @@ void Player::Initialize(Model* modelBody, Model* modelHead, Model* modelL_arm, M
 	worldTransformHead_.Initialize();
 	worldTransformL_arm.Initialize();
 	worldTransformR_arm.Initialize();
-	// 初期化
+	// 場所の初期化
 	worldTransform_.scale_ = {1.0f, 1.0f, 1.0f};
 	worldTransform_.rotation_ = {0.0f, 0.0f, 0.0f};
 	worldTransform_.translation_ = {0.0f, 0.0f, 0.0f};
@@ -39,6 +40,8 @@ void Player::Initialize(Model* modelBody, Model* modelHead, Model* modelL_arm, M
 
 void Player::Update()
 {
+	// 基底クラスの更新
+	BaseCharacter::Update();
 	//ゲームパッドの状態を得る変数
 	XINPUT_STATE joyState;
 
@@ -96,11 +99,18 @@ void Player::UpdateFloatingGimmick() {
 	//浮遊を座標に反映
 	worldTransform_.translation_.y = std::sin(floatingParamerer_) * Amplitude;
 }
-void Player::Draw(ViewProjection& viewProjection) 
+void Player::Draw(const ViewProjection& viewProjection) 
 {
-	modelFighterBody_->Draw(worldTransformBody_, viewProjection); 
+	//3Dモデルを描画
+	models_[0]->Draw(worldTransformBody_, viewProjection); 
+	models_[1]->Draw(worldTransformHead_, viewProjection); 
+	models_[2]->Draw(worldTransformL_arm, viewProjection); 
+	models_[3]->Draw(worldTransformR_arm, viewProjection); 
+
+
+	/*modelFighterBody_->Draw(worldTransformBody_, viewProjection); 
 	modelFighterHead_->Draw(worldTransformHead_, viewProjection);
 	modelFighterL_arm->Draw(worldTransformL_arm, viewProjection);
-	modelFighterR_arm->Draw(worldTransformR_arm, viewProjection);
+	modelFighterR_arm->Draw(worldTransformR_arm, viewProjection);*/
 }
 

@@ -1,4 +1,4 @@
-#include "BaseCharacter.h"
+ï»¿#include "BaseCharacter.h"
 
 void BaseCharacter::Initialize(const std::vector<Model*>& models) { 
 	models_ = models; 
@@ -11,7 +11,7 @@ void BaseCharacter::Update() {
 }
 
 void BaseCharacter::Draw(const ViewProjection& viewProjection) {
-	//ƒ‚ƒfƒ‹•`‰æ
+	//ãƒ¢ãƒ‡ãƒ«æç”»
 	for (Model* model : models_) {
 		model->Draw(worldTransform_, viewProjection);
 	}
