@@ -109,6 +109,6 @@ void Player::Draw(const ViewProjection& viewProjection)
 	/*modelFighterBody_->Draw(worldTransformBody_, viewProjection); 
 	modelFighterHead_->Draw(worldTransformHead_, viewProjection);
 	modelFighterL_arm->Draw(worldTransformL_arm, viewProjection);
-	modelFighterR_arm->Draw(worldTransformR_arm, viewProjection);*/
+	modelFighterR_arm->Draw(worldTransformR_arm, viewProjection);ff*/
 }
 
