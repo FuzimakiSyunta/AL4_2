@@ -63,7 +63,7 @@ private:
 	Model* modelFighterL_arm;
 	Model* modelFighterR_arm;
 	//浮遊ギミック媒介変数変数
-	float floatingParamerer_ = 0.0f;
+	float floatingParameter_ = 0.0f;
 	
 	bool isHammerDraw_;
 	bool isHammerSet_;

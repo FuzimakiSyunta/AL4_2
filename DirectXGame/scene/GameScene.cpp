@@ -37,6 +37,8 @@ void GameScene::Initialize() {
 	modelFighterHead_.reset(Model::CreateFromOBJ("float_Head", true));
 	modelFighterL_arm_.reset(Model::CreateFromOBJ("float_L_arm", true));
 	modelFighterR_arm_.reset(Model::CreateFromOBJ("float_R_arm", true));
+	modelHummer_.reset(Model::CreateFromOBJ("hammer", true));
+	
 	// 敵キャラの生成
 	enemy_ = std::make_unique<Enemy>();
 	// 3Dモデルの生成
@@ -51,7 +53,7 @@ void GameScene::Initialize() {
 	//自キャラモデル
 	std::vector<Model*> playerModels = {
 	    modelFighterBody_.get(), modelFighterHead_.get(), modelFighterL_arm_.get(),
-	    modelFighterR_arm_.get()};
+	    modelFighterR_arm_.get(), modelHummer_.get()};
 	// 自キャラの初期化
 	player_->Initialize(playerModels);
 
