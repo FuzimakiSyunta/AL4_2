@@ -4,6 +4,7 @@
 #include<math.h>
 #include<Input.h>
 #include "BaseCharacter.h"
+#include <optional>
 
 class Player:public BaseCharacter {
 public:
@@ -35,12 +36,24 @@ public:
 	//浮遊ギミック更新
 	void UpdateFloatingGimmick();
 
+	void BehaviorRootUpdate();
+	void BehaviorAttackUpdate();
+	void BehaviorRootInitialize();
+	void BehaviorAttackInitialize();
+	enum class Behavior {
+		kRoot,
+		kAttack,
+	};
+
 private:
+	Behavior behavior_ = Behavior::kRoot;
+	std::optional<Behavior> behaviorRequest_ = std::nullopt;
 	WorldTransform worldTransform_;
 	WorldTransform worldTransformBody_;
 	WorldTransform worldTransformHead_;
 	WorldTransform worldTransformL_arm;
 	WorldTransform worldTransformR_arm;
+	WorldTransform worldTransformHammer_;
 	// ビュープロジェクション
 	const ViewProjection* viewProjection_ = nullptr;
 	Model* model_ = nullptr;
@@ -51,6 +64,9 @@ private:
 	Model* modelFighterR_arm;
 	//浮遊ギミック媒介変数変数
 	float floatingParamerer_ = 0.0f;
-	//周期
+	
+	bool isHammerDraw_;
+	bool isHammerSet_;
+	int stanbyTime;
 
 };

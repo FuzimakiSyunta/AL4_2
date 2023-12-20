@@ -132,6 +132,18 @@ Matrix4x4 Multiply(Matrix4x4 m1, Matrix4x4 m2) {
 	                 m1.m[3][3] * m2.m[3][3];
 	return result;
 };
+Vector3 Multiply(Vector3 vector, Matrix4x4 matrix) {
+	Vector3 result = {};
+
+	result.x = vector.x * matrix.m[0][0] + vector.y * matrix.m[0][1] + vector.z * matrix.m[0][2] +
+	           matrix.m[0][3];
+	result.y = vector.x * matrix.m[1][0] + vector.y * matrix.m[1][1] + vector.z * matrix.m[1][2] +
+	           matrix.m[1][3];
+	result.z = vector.x * matrix.m[2][0] + vector.y * matrix.m[2][1] + vector.z * matrix.m[2][2] +
+	           matrix.m[2][3];
+
+	return result;
+}
 
 Matrix4x4 MakeAffineMatrix(const Vector3& scale, Vector3& rotate, const Vector3& translate) {
 	Matrix4x4 rotateXMatrix = MakeRotateXMatrix(rotate.x);

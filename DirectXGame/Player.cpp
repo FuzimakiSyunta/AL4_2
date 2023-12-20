@@ -9,6 +9,9 @@ void Player::Initialize(const std::vector<Model*>& models) {
 	modelFighterHead_ = modelHead;
 	modelFighterL_arm = modelL_arm;
 	modelFighterR_arm = modelR_arm;*/
+	isHammerDraw_ = false;
+	isHammerSet_ = false;
+	stanbyTime = 0;
 
 	// 初期化
 	worldTransform_.Initialize();
@@ -36,39 +39,44 @@ void Player::Initialize(const std::vector<Model*>& models) {
 	worldTransformR_arm.scale_ = {1.0f, 1.0f, 1.0f};
 	worldTransformR_arm.rotation_ = {0.0f, 0.0f, 0.0f};
 	worldTransformR_arm.translation_ = {0.5f, 1.25f, 0.0f};
+	//ハンマーの初期化
+	worldTransformHammer_.Initialize();
+	worldTransformHammer_.scale_ = {1.0f, 1.0f, 1.0f};
+	worldTransformHammer_.rotation_ = {0.0f, 0.0f, 0.0f};
+	worldTransformHammer_.translation_ = {0.0f, 1.0f, 0.0f};
 }
 
 void Player::Update()
 {
-	// 基底クラスの更新
-	BaseCharacter::Update();
-	//ゲームパッドの状態を得る変数
-	XINPUT_STATE joyState;
+	if (behaviorRequest_) {
+		behavior_ = behaviorRequest_.value();
+		switch (behavior_) {
+		case Behavior::kRoot:
+		default:
+			BehaviorRootInitialize();
+			break;
+		case Behavior::kAttack:
+			BehaviorAttackInitialize();
 
-	if (Input::GetInstance()->GetJoystickState(0,joyState))
-	{
-		//速さ
-		const float speed = 0.3f;
-		worldTransformBody_.parent_ = &worldTransform_;
-		worldTransformHead_.parent_ = &worldTransform_;
-		worldTransformL_arm.parent_ = &worldTransform_;
-		worldTransformR_arm.parent_ = &worldTransform_;
-		//移動量
-		Vector3 move = {
-		    (float)joyState.Gamepad.sThumbLX / SHRT_MAX * speed, 0.0f,
-		    (float)joyState.Gamepad.sThumbLY / SHRT_MAX * speed};
-		// 移動量に速さを反映
-		move = VectorMultiply(speed, Normalize(move));
-
-		move = TransformNormal(move, MakeRotateYMatrix(viewProjection_->rotation_.y));
-
-		// 移動
-		worldTransform_.translation_ = Add(worldTransform_.translation_, move);
-
-		if (move.z != 0 || move.y != 0) {
-			worldTransform_.rotation_.y = std::atan2(move.x, move.z);
+			break;
 		}
-	};
+		behaviorRequest_ = std::nullopt;
+	}
+	switch (behavior_) {
+	case Behavior::kRoot:
+	default:
+		BehaviorRootUpdate();
+		break;
+	case Behavior::kAttack:
+		BehaviorAttackUpdate();
+		break;
+	}
+
+	worldTransformBody_.parent_ = &worldTransform_;
+	worldTransformHead_.parent_ = &worldTransform_;
+	worldTransformL_arm.parent_ = &worldTransform_;
+	worldTransformR_arm.parent_ = &worldTransform_;
+	worldTransformHammer_.parent_ = &worldTransformBody_;
 
 	UpdateFloatingGimmick();
 
@@ -97,6 +105,39 @@ void Player::UpdateFloatingGimmick() {
 	//浮遊を座標に反映
 	worldTransform_.translation_.y = std::sin(floatingParamerer_) * Amplitude;
 }
+void Player::BehaviorRootUpdate() {
+	BehaviorRootInitialize();
+	XINPUT_STATE joyState;
+
+	Vector3 move = {0.0f, 0.0f, 0.0f};
+
+	const float kCharacterSpeed = 0.5f;
+	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
+		move.x = (float)joyState.Gamepad.sThumbLX / SHRT_MAX * kCharacterSpeed;
+		move.z = (float)joyState.Gamepad.sThumbLY / SHRT_MAX * kCharacterSpeed;
+		move = Multiply(kCharacterSpeed, Normalize(move));
+		
+
+		Matrix4x4 rotateYMatrix = MakeRotateYMatrix(viewProjection_->rotation_.y);
+
+		move = TransformNormal(move, rotateYMatrix);
+
+		worldTransform_.translation_ = Add(worldTransform_.translation_, move);
+	}
+
+	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
+		if (joyState.Gamepad.wButtons == XINPUT_GAMEPAD_B) {
+			behaviorRequest_ = Behavior::kAttack;
+		}
+	}
+
+	if (move.z != 0 || move.y != 0) {
+		worldTransform_.rotation_.y = std::atan2(move.x, move.z);
+	}
+
+	UpdateFloatingGimick();
+}
+
 void Player::Draw(const ViewProjection& viewProjection) 
 {
 	//3Dモデルを描画
