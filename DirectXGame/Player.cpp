@@ -102,12 +102,12 @@ void Player::Update()
 	    worldTransform_.translation_.x, worldTransform_.translation_.y,
 	    worldTransform_.translation_.z};
 
-	// 画面の座標を表示
-	ImGui::Begin("Player");
-	ImGui::SliderFloat3("playerRot", playerRot, -28.0f, 28.0f);
-	ImGui::SliderFloat3("playerPos", playerPos, -28.0f, 28.0f);
-	ImGui::Text("%d\n", behaviorRequest_);
-	ImGui::End();
+	//// 画面の座標を表示
+	//ImGui::Begin("Player");
+	//ImGui::SliderFloat3("playerRot", playerRot, -28.0f, 28.0f);
+	//ImGui::SliderFloat3("playerPos", playerPos, -28.0f, 28.0f);
+	//ImGui::Text("%d\n", behaviorRequest_);
+	//ImGui::End();
 
 	worldTransform_.translation_.x = playerPos[0];
 	worldTransform_.translation_.y = playerPos[1];
