@@ -85,6 +85,7 @@ void GameScene::Initialize() {
 }
 
 void GameScene::Update() {
+	
 	player_->Update();
 	enemy_->Update();
 	debugCamera_->Update();
@@ -125,6 +126,16 @@ void GameScene::ChackAllCollisions() {
 
 	//衝突判定と応答
 	collisionManager_->ChackAllCollisions();
+}
+void GameScene::ClearTimer()
+{ 
+	if (isClear==false) {
+		clearTimer++;
+		if (clearTimer>600) {
+			isClear = true;
+			isSceneEnd = true;
+		}
+	}
 }
 
 void GameScene::Draw() {
@@ -174,6 +185,12 @@ void GameScene::Draw() {
 	Sprite::PostDraw();
 
 #pragma endregion
+
+}
+void GameScene::sceneReset() {
+	isSceneEnd = false;
+	isClear = false;
+	clearTimer = 0;
 }
 
 

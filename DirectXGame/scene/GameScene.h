@@ -15,6 +15,7 @@
 #include "WorldTransform.h"
 #include "Enemy.h"
 #include"CollisionManager.h"
+#include <Scene.h>
 
 /// <summary>
 /// ゲームシーン
@@ -48,12 +49,32 @@ public: // メンバ関数
 
 	void ChackAllCollisions();
 
+	bool GetUpdateFlag() { return updateFlag; }
+	bool GetIsClear() { return isClear; }
+
+	//クリアタイマー
+	int clearTimer = 0;
+
+	void ClearTimer();
+
+	// シーンのリセット
+	void sceneReset();
+
+	bool isSceneEnd = false;
+
+	bool IsSceneEnd() { return isSceneEnd; }
+	SceneType NextScene() { return SceneType::kGameClear; }
+
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	// ワールドトランスフォーム
 	WorldTransform worldTransform_;
 	// ビュープロジェクション
 	ViewProjection viewProjection_;
+
+	bool updateFlag = true;
+
+	bool isClear=false;
 
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
