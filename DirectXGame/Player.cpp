@@ -96,18 +96,26 @@ void Player::Update()
 	worldTransformHammer_.UpdateMatrix();
 
 	// デバック
-	float playerPos[3] = {
+	float playerRot[3] = {
 	    worldTransform_.rotation_.x, worldTransform_.rotation_.y, worldTransform_.rotation_.z};
+	float playerPos[3] = {
+	    worldTransform_.translation_.x, worldTransform_.translation_.y,
+	    worldTransform_.translation_.z};
 
 	// 画面の座標を表示
 	ImGui::Begin("Player");
+	ImGui::SliderFloat3("playerRot", playerRot, -28.0f, 28.0f);
 	ImGui::SliderFloat3("playerPos", playerPos, -28.0f, 28.0f);
 	ImGui::Text("%d\n", behaviorRequest_);
 	ImGui::End();
 
-	worldTransform_.rotation_.x = playerPos[0];
-	worldTransform_.rotation_.y = playerPos[1];
-	worldTransform_.rotation_.z = playerPos[2];
+	worldTransform_.translation_.x = playerPos[0];
+	worldTransform_.translation_.y = playerPos[1];
+	worldTransform_.translation_.z = playerPos[2];
+
+	worldTransform_.rotation_.x = playerRot[0];
+	worldTransform_.rotation_.y = playerRot[1];
+	worldTransform_.rotation_.z = playerRot[2];
 }
 
 void Player::InitializeFloatingGimmick() { 
