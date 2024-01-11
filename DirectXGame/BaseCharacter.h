@@ -1,7 +1,8 @@
 ﻿#pragma once
 #include"Model.h"
+#include"Collider.h"
 
-class BaseCharacter {
+class BaseCharacter : public Collider{
 public:
 	// デストラクタ
 
@@ -21,6 +22,8 @@ public:
 	virtual void Draw(const ViewProjection& viewProjection);
 
 	const WorldTransform& GetWorldTransform() { return worldTransform_; }
+
+	virtual Vector3 GetCenterPosition() const override;
 
 protected:
 	//モデルデータ配列

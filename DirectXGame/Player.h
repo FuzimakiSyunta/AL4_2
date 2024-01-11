@@ -38,12 +38,21 @@ public:
 
 	void BehaviorRootUpdate();
 	void BehaviorAttackUpdate();
+	void BehaviorJumpUpdate();
 	void BehaviorRootInitialize();
 	void BehaviorAttackInitialize();
+	void BehaviorJumpInitialize();
+
 	enum class Behavior {
 		kRoot,
 		kAttack,
+		kJump,
 	};
+
+	void OnCollision() override;
+
+	//中心座標を取得
+	Vector3 GetCenterPosition() const override;
 
 private:
 	Behavior behavior_ = Behavior::kRoot;
@@ -68,5 +77,7 @@ private:
 	bool isHammerDraw_;
 	bool isHammerSet_;
 	int stanbyTime;
+	int jumpTime;
+	Vector3 velocity_ = {};
 
 };

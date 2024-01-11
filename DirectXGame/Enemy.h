@@ -22,6 +22,8 @@ public:
 	/// </summary>
 	void Draw(const ViewProjection& viewProjection) override;
 
+	// 中心座標を取得
+	Vector3 GetCenterPosition() const override;
 
 private:
 	//WorldTransform worldTransform_;

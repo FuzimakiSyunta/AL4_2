@@ -14,6 +14,7 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include "Enemy.h"
+#include"CollisionManager.h"
 
 /// <summary>
 /// ゲームシーン
@@ -25,8 +26,11 @@ public: // メンバ関数
 	/// コンストクラタ
 	/// </summary>
 	GameScene();
-
-
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
+	~GameScene();
+	
 	/// <summary>
 	/// 初期化
 	/// </summary>
@@ -41,6 +45,8 @@ public: // メンバ関数
 	/// 描画
 	/// </summary>
 	void Draw();
+
+	void ChackAllCollisions();
 
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
@@ -72,6 +78,7 @@ private: // メンバ変数
 
 	// 敵キャラ
 	std::unique_ptr<Enemy> enemy_;
+	
 
 	// デバックカメラ
 	std::unique_ptr<DebugCamera> debugCamera_;
@@ -90,6 +97,8 @@ private: // メンバ変数
 	// 追従カメラ
 	std::unique_ptr<FollowCamera> followCamera_;
 
+	//衝突マネージャ
+	std::unique_ptr<CollisionManager> collisionManager_;
 
 	/// <summary>
 	/// ゲームシーン用

@@ -11,7 +11,7 @@ void Enemy::Initialize(const std::vector<Model*>& models) {
 	// 場所の初期化
 	worldTransform_.scale_ = {1.0f, 1.0f, 1.0f};
 	worldTransform_.rotation_ = {0.0f, 0.0f, 0.0f};
-	worldTransform_.translation_ = {0.0f, 0.0f, 0.0f};
+	worldTransform_.translation_ = {0.0f, 0.0f, 10.0f};
 	// 体の初期化
 	worldTransformBody_.scale_ = {1.0f, 1.0f, 1.0f};
 	worldTransformBody_.rotation_ = {0.0f, 0.0f, 0.0f};
@@ -54,4 +54,13 @@ void Enemy::Draw(const ViewProjection& viewProjection) {
 	models_[0]->Draw(worldTransformBody_, viewProjection);
 	models_[1]->Draw(worldTransformL_arm, viewProjection);
 	models_[2]->Draw(worldTransformR_arm, viewProjection);
+}
+
+Vector3 Enemy::GetCenterPosition() const { 
+	//ローカル座標のオフセット
+	const Vector3 offset = {0.0f, 1.5f, 0.0f};
+	// ワールド座標変換
+	Vector3 worldPos = Transform(offset, worldTransform_.matWorld_);
+
+	return worldPos;
 }

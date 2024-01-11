@@ -58,9 +58,12 @@ void Player::Update()
 			break;
 		case Behavior::kAttack:
 			BehaviorAttackInitialize();
-
+			break;
+		case Behavior::kJump:
+			BehaviorJumpInitialize();
 			break;
 		}
+
 		behaviorRequest_ = std::nullopt;
 	}
 	switch (behavior_) {
@@ -70,6 +73,9 @@ void Player::Update()
 		break;
 	case Behavior::kAttack:
 		BehaviorAttackUpdate();
+		break;
+	case Behavior::kJump:
+		BehaviorJumpUpdate();
 		break;
 	}
 
@@ -96,6 +102,7 @@ void Player::Update()
 	// 画面の座標を表示
 	ImGui::Begin("Player");
 	ImGui::SliderFloat3("playerPos", playerPos, -28.0f, 28.0f);
+	ImGui::Text("%d\n", behaviorRequest_);
 	ImGui::End();
 
 	worldTransform_.rotation_.x = playerPos[0];
@@ -116,16 +123,16 @@ void Player::UpdateFloatingGimmick() {
 	//2πwを超えたら0に戻す
 	floatingParameter_ = std::fmod(floatingParameter_,2.0f*(float)M_PI);
 	//浮遊の振幅
-	const float Amplitude = 1.0f;
+	const float Amplitude = 0.1f;
 	//浮遊を座標に反映
 	worldTransform_.translation_.y = std::sin(floatingParameter_) * Amplitude;
-	const float amplitube = 0.15f;
+	const float amplitube = 0.1f;
 	worldTransformBody_.translation_.y = std::sin(floatingParameter_) * amplitube;
 	worldTransformR_arm.rotation_.x = std::sin(floatingParameter_) * amplitube;
 	worldTransformL_arm.rotation_.x = std::sin(floatingParameter_) * amplitube;
 }
 void Player::BehaviorRootUpdate() {
-	BehaviorRootInitialize();
+	//BehaviorRootInitialize();
 	// 基底クラスの更新
 	BaseCharacter::Update();
 	// ゲームパッドの状態を得る変数
@@ -136,19 +143,19 @@ void Player::BehaviorRootUpdate() {
 		const float speed = 0.3f;
 
 		// 移動量
-		Vector3 move = {
+		velocity_ = {
 		    (float)joyState.Gamepad.sThumbLX / SHRT_MAX * speed, 0.0f,
 		    (float)joyState.Gamepad.sThumbLY / SHRT_MAX * speed};
 		// 移動量に速さを反映
-		move = VectorMultiply(speed, Normalize(move));
+		velocity_ = VectorMultiply(speed, Normalize(velocity_));
 
-		move = TransformNormal(move, MakeRotateYMatrix(viewProjection_->rotation_.y));
+		velocity_ = TransformNormal(velocity_, MakeRotateYMatrix(viewProjection_->rotation_.y));
 
 		// 移動
-		worldTransform_.translation_ = Add(worldTransform_.translation_, move);
+		worldTransform_.translation_ = Add(worldTransform_.translation_, velocity_);
 
-		if (move.z != 0 || move.y != 0) {
-			worldTransform_.rotation_.y = std::atan2(move.x, move.z);
+		if (velocity_.z != 0 || velocity_.y != 0) {
+			worldTransform_.rotation_.y = std::atan2(velocity_.x, velocity_.z);
 		}
 
 	}
@@ -157,7 +164,11 @@ void Player::BehaviorRootUpdate() {
 		if (joyState.Gamepad.wButtons == XINPUT_GAMEPAD_B) {
 			behaviorRequest_ = Behavior::kAttack;
 		}
+		/*if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_X) {
+			behaviorRequest_ = Behavior::kJump;
+		}*/
 	}
+		
 
 	UpdateFloatingGimmick();
 }
@@ -194,12 +205,51 @@ void Player::BehaviorAttackUpdate() {
 	}
 }
 
+
 void Player::BehaviorRootInitialize() {
 	isHammerDraw_ = false;
 	worldTransformHammer_.rotation_.x = 0.0f;
+	
 }
 
 void Player::BehaviorAttackInitialize() { isHammerDraw_ = true; }
+
+void Player::BehaviorJumpInitialize() { 
+	worldTransformBody_.translation_.y = 0;
+	worldTransformL_arm.rotation_.x = 0;
+	worldTransformR_arm.rotation_.x = 0;
+	//ジャンプ初速
+	const float kJumpFirstSpeed = 1.0f;
+	//ジャンプ初速を与える
+	velocity_.y = kJumpFirstSpeed;
+
+}
+void Player::OnCollision() { behaviorRequest_ = Behavior::kJump; }
+
+void Player::BehaviorJumpUpdate() { 
+	// 移動
+	worldTransform_.translation_ = Add(worldTransform_.translation_, velocity_);
+	// 重力加速度
+	const float kGravityAcceleration = 0.05f;
+	// 加速度ベクトル
+	Vector3 accelerationVector = {0, -kGravityAcceleration, 0};
+	// 加速する
+	velocity_ = Add(velocity_, accelerationVector);
+	// 着地
+	if (worldTransform_.translation_.y <= 0.0f) {
+		worldTransform_.translation_.y = 0;
+		// ジャンプ終了
+		behaviorRequest_ = Behavior::kRoot;
+	}
+}
+Vector3 Player::GetCenterPosition() const {
+	//ローカル座標のオフセット
+	const Vector3 offset = {0.0f, 1.5f, 0.0f};
+	//ワールド座標変換
+	Vector3 worldPos = Transform(offset, worldTransform_.matWorld_);
+
+	return worldPos;
+}
 
 void Player::Draw(const ViewProjection& viewProjection) 
 {

@@ -5,6 +5,8 @@
 
 GameScene::GameScene() {}
 
+GameScene::~GameScene() {}
+
 
 void GameScene::Initialize() {
 
@@ -69,15 +71,15 @@ void GameScene::Initialize() {
 	skydomeModel_.reset(Model::CreateFromOBJ("skydome", true));
 	// 天球の初期化
 	skydome_->Initialize(skydomeModel_.get());
-
-
-
 	// 地面の生成
 	ground_ = std::make_unique<Ground>();
 	// 3Dモデルの生成
 	groundModel_.reset(Model::CreateFromOBJ("ground", true));
 	// 地面の初期化
 	ground_->Initialize(groundModel_.get());
+
+	//衝突マネージャの生成
+	collisionManager_ = std::make_unique<CollisionManager>();
 
 	
 }
@@ -95,6 +97,8 @@ void GameScene::Update() {
 	viewProjection_.matProjection = followCamera_->GetViewProjection().matProjection;
 	viewProjection_.matView = followCamera_->GetViewProjection().matView;
 
+	ChackAllCollisions();
+
 #ifdef _DEBUG
 	if (input_->TriggerKey(DIK_C)) {
 		isDebugCameraActive_ = true;
@@ -110,6 +114,17 @@ void GameScene::Update() {
 	} else {
 		viewProjection_.TransferMatrix();
 	}
+}
+void GameScene::ChackAllCollisions() {
+	//衝突マネージャのリセット	
+	collisionManager_->Reset();
+	//コライダーをリストに登録
+	collisionManager_->AddCollider(player_.get());
+
+	collisionManager_->AddCollider(enemy_.get());
+
+	//衝突判定と応答
+	collisionManager_->ChackAllCollisions();
 }
 
 void GameScene::Draw() {
@@ -160,3 +175,5 @@ void GameScene::Draw() {
 
 #pragma endregion
 }
+
+
