@@ -45,6 +45,8 @@ void Player::Initialize(const std::vector<Model*>& models) {
 	worldTransformHammer_.scale_ = {1.0f, 1.0f, 1.0f};
 	worldTransformHammer_.rotation_ = {0.0f, 0.0f, 0.0f};
 	worldTransformHammer_.translation_ = {0.0f, 1.0f, 0.0f};
+	//カウンターの初期化
+	Count_ = 0;
 }
 
 void Player::Update()
@@ -102,12 +104,13 @@ void Player::Update()
 	    worldTransform_.translation_.x, worldTransform_.translation_.y,
 	    worldTransform_.translation_.z};
 
-	//// 画面の座標を表示
-	//ImGui::Begin("Player");
-	//ImGui::SliderFloat3("playerRot", playerRot, -28.0f, 28.0f);
-	//ImGui::SliderFloat3("playerPos", playerPos, -28.0f, 28.0f);
-	//ImGui::Text("%d\n", behaviorRequest_);
-	//ImGui::End();
+	// 画面の座標を表示
+	ImGui::Begin("Player");
+	ImGui::SliderFloat3("playerRot", playerRot, -28.0f, 28.0f);
+	ImGui::SliderFloat3("playerPos", playerPos, -28.0f, 28.0f);
+	ImGui::Text("%d\n", behaviorRequest_);
+	ImGui::Text("%d\n", Count_);
+	ImGui::End();
 
 	worldTransform_.translation_.x = playerPos[0];
 	worldTransform_.translation_.y = playerPos[1];
@@ -168,14 +171,14 @@ void Player::BehaviorRootUpdate() {
 
 	}
 
-	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
-		if (joyState.Gamepad.wButtons == XINPUT_GAMEPAD_B) {
-			behaviorRequest_ = Behavior::kAttack;
-		}
-		/*if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_X) {
-			behaviorRequest_ = Behavior::kJump;
-		}*/
-	}
+	//if (Input::GetInstance()->GetJoystickState(0, joyState)) {
+	//	if (joyState.Gamepad.wButtons == XINPUT_GAMEPAD_B) {
+	//		behaviorRequest_ = Behavior::kAttack;
+	//	}
+	//	/*if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_X) {
+	//		behaviorRequest_ = Behavior::kJump;
+	//	}*/
+	//}
 		
 
 	UpdateFloatingGimmick();
@@ -232,13 +235,17 @@ void Player::BehaviorJumpInitialize() {
 	velocity_.y = kJumpFirstSpeed;
 
 }
-void Player::OnCollision() { behaviorRequest_ = Behavior::kJump; }
+void Player::OnCollision() { 
+	Count_++;
+	
+	behaviorRequest_ = Behavior::kJump; 
+}
 
 void Player::BehaviorJumpUpdate() { 
 	// 移動
 	worldTransform_.translation_ = Add(worldTransform_.translation_, velocity_);
 	// 重力加速度
-	const float kGravityAcceleration = 0.05f;
+	const float kGravityAcceleration = 0.08f;
 	// 加速度ベクトル
 	Vector3 accelerationVector = {0, -kGravityAcceleration, 0};
 	// 加速する

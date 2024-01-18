@@ -54,6 +54,8 @@ public:
 	//中心座標を取得
 	Vector3 GetCenterPosition() const override;
 
+	bool SetClearCount() { return Count_; }
+
 private:
 	Behavior behavior_ = Behavior::kRoot;
 	std::optional<Behavior> behaviorRequest_ = std::nullopt;
@@ -77,7 +79,8 @@ private:
 	bool isHammerDraw_;
 	bool isHammerSet_;
 	int stanbyTime;
-	int jumpTime;
+	int Count_;
+	
 	Vector3 velocity_ = {};
 
 };

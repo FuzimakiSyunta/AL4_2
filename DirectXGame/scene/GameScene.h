@@ -49,7 +49,7 @@ public: // メンバ関数
 
 	void ChackAllCollisions();
 
-	bool GetUpdateFlag() { return updateFlag; }
+	
 	bool GetIsClear() { return isClear; }
 
 	//クリアタイマー
@@ -64,6 +64,8 @@ public: // メンバ関数
 
 	bool IsSceneEnd() { return isSceneEnd; }
 	SceneType NextScene() { return SceneType::kGameClear; }
+	
+	
 
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
