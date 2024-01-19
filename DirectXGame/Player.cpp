@@ -171,14 +171,14 @@ void Player::BehaviorRootUpdate() {
 
 	}
 
-	//if (Input::GetInstance()->GetJoystickState(0, joyState)) {
-	//	if (joyState.Gamepad.wButtons == XINPUT_GAMEPAD_B) {
-	//		behaviorRequest_ = Behavior::kAttack;
-	//	}
-	//	/*if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_X) {
-	//		behaviorRequest_ = Behavior::kJump;
-	//	}*/
-	//}
+	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
+		if (joyState.Gamepad.wButtons == XINPUT_GAMEPAD_B) {
+			behaviorRequest_ = Behavior::kAttack;
+		}
+		/*if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_X) {
+			behaviorRequest_ = Behavior::kJump;
+		}*/
+	}
 		
 
 	UpdateFloatingGimmick();
