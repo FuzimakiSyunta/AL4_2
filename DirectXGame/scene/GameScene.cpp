@@ -81,13 +81,24 @@ void GameScene::Initialize() {
 	//衝突マネージャの生成
 	collisionManager_ = std::make_unique<CollisionManager>();
 
-	
+	//フェード
+	uint32_t fadeTexHandle = TextureManager::Load("fade.png");
+	fadeSprite_ = Sprite::Create(fadeTexHandle, {0,0});
+	isFade_ = true;
 }
 
 void GameScene::Update() {
-	
-	player_->Update();
-	enemy_->Update();
+	if (isFade_ == true) {
+		// フェード
+		fadeColor_.w -= 0.005f;
+		fadeSprite_->SetColor(fadeColor_);
+		if (fadeColor_.w<=0) {
+			isFade_ = false;
+		}
+	} else {
+		player_->Update();
+		enemy_->Update();
+	}
 	debugCamera_->Update();
 	ground_->Update();
 	// 追従カメラの更新
@@ -99,6 +110,7 @@ void GameScene::Update() {
 	viewProjection_.matView = followCamera_->GetViewProjection().matView;
 
 	ChackAllCollisions();
+	
 
 #ifdef _DEBUG
 	if (input_->TriggerKey(DIK_C)) {
@@ -127,16 +139,6 @@ void GameScene::ChackAllCollisions() {
 	//衝突判定と応答
 	collisionManager_->ChackAllCollisions();
 }
-void GameScene::ClearTimer()
-{ 
-	if (isClear==false) {
-		clearTimer++;
-		if (clearTimer>600) {
-			isClear = true;
-			isSceneEnd = true;
-		}
-	}
-}
 
 void GameScene::Draw() {
 
@@ -164,8 +166,10 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
-	player_->Draw(viewProjection_);
-	enemy_->Draw(viewProjection_);
+	if (isFade_ == false) {
+		player_->Draw(viewProjection_);
+		enemy_->Draw(viewProjection_);
+	}
 	ground_->Draw(viewProjection_);
 	skydome_->Draw(viewProjection_);
 
@@ -181,6 +185,8 @@ void GameScene::Draw() {
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
 
+	fadeSprite_->Draw();
+
 	// スプライト描画後処理
 	Sprite::PostDraw();
 
@@ -188,9 +194,13 @@ void GameScene::Draw() {
 
 }
 void GameScene::sceneReset() {
-	isSceneEnd = false;
-	isClear = false;
-	clearTimer = 0;
+	// ゲームパッドの状態を得る変数
+	XINPUT_STATE joyState;
+	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
+		if (joyState.Gamepad.wButtons == XINPUT_GAMEPAD_A) {
+			isSceneEnd = true;
+		}
+	}
 }
 
 

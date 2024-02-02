@@ -52,18 +52,13 @@ public: // メンバ関数
 	
 	bool GetIsClear() { return isClear; }
 
-	//クリアタイマー
-	int clearTimer = 0;
-
-	void ClearTimer();
-
 	// シーンのリセット
 	void sceneReset();
 
 	bool isSceneEnd = false;
 
 	bool IsSceneEnd() { return isSceneEnd; }
-	SceneType NextScene() { return SceneType::kGameClear; }
+	SceneType NextScene() { return SceneType::kTitle; }
 	
 	
 
@@ -122,6 +117,11 @@ private: // メンバ変数
 
 	//衝突マネージャ
 	std::unique_ptr<CollisionManager> collisionManager_;
+
+	//フェード
+	Sprite* fadeSprite_ = nullptr;
+	Vector4 fadeColor_ = {1.0f, 1.0f, 1.0f, 1.0f};
+	bool isFade_;
 
 	/// <summary>
 	/// ゲームシーン用

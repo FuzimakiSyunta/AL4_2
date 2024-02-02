@@ -7,7 +7,6 @@
 #include "TextureManager.h"
 #include "WinApp.h"
 #include "TitleScene.h"
-#include "GameClear.h"
 
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
@@ -19,8 +18,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	AxisIndicator* axisIndicator = nullptr;
 	PrimitiveDrawer* primitiveDrawer = nullptr;
 	GameScene* gameScene = nullptr;
-	/*TitleScene* titleScene = nullptr;
-	GameClear* gameClearScene = nullptr;*/
+	TitleScene* titleScene = nullptr;
 
 	// ゲームウィンドウの作成
 	win = WinApp::GetInstance();
@@ -65,15 +63,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	gameScene = new GameScene();
 	gameScene->Initialize();
 
-	//// タイトルシーンの初期化
-	//titleScene = new TitleScene();
-	//titleScene->Initialize();
+	// タイトルシーンの初期化
+	titleScene = new TitleScene();
+	titleScene->Initialize();
 
-	//// クリアシーンの初期化
-	//gameClearScene = new GameClear();
-	//gameClearScene->Initialize();
 
-	/*SceneType sceneNo = SceneType::kTitle;*/
+	SceneType sceneNo = SceneType::kTitle;
 
 	// メインループ
 	while (true) {
@@ -86,91 +81,68 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		imguiManager->Begin();
 		// 入力関連の毎フレーム処理
 		input->Update();
-		//switch (sceneNo) {
-		//case SceneType::kTitle:
-		//	titleScene->Update();
-
-		//	if (titleScene->IsSceneEnd()) {
-		//		// 次のシーンの値を代入してシーン切り替え
-		//		sceneNo = titleScene->NextScene();
-
-		//		// タイトルシーンの初期化、フラグリセット等
-		//		titleScene->sceneReset();
-		//	}
-		//	break;
-		//case SceneType::kGamePlay:
-		//	// ゲームシーンの毎フレーム処理
-		//	gameScene->Update();
-		//	gameScene->ClearTimer();
-		//	if (input->TriggerKey(DIK_RETURN)) {
-		//		sceneNo = SceneType::kTitle;
-		//	}
-
-		//	//if (gameScene->GetIsClear() == true) {
-		//	//	sceneNo = SceneType::kGameClear;
-		//	//}
-
-		//	if (gameScene->IsSceneEnd()) {
-		//		// 次のシーンの値を代入してシーン切り替え
-		//		sceneNo = gameScene->NextScene();
-
-		//		// ゲームシーンの初期化、フラグリセット等
-		//		gameScene->sceneReset();
-		//	}
-		//	break;
-		//case SceneType::kGameClear:
-		//	gameClearScene->Update();
-
-		//	if (gameClearScene->IsSceneEnd()) {
-		//		// 次のシーンの値を代入してシーン切り替え
-		//		sceneNo = gameClearScene->NextScene();
-
-		//		// タイトルシーンの初期化、フラグリセット等
-		//		gameClearScene->sceneReset();
-		//	}
-		//	/*gameScene->ClearBGM();*/
-		//}
-		// ゲームシーンの毎フレーム処理
-		gameScene->Update();
-		// 軸表示の更新
-		axisIndicator->Update();
-		// ImGui受付終了
-		imguiManager->End();
-
-		// 描画開始
-		dxCommon->PreDraw();
-
-		gameScene->Draw();
-
-		/*switch (sceneNo) {
+		switch (sceneNo) {
 		case SceneType::kTitle:
-			titleScene->Draw();
+			titleScene->Update();
+
+			if (titleScene->IsSceneEnd()) {
+				// 次のシーンの値を代入してシーン切り替え
+				sceneNo = titleScene->NextScene();
+
+				// タイトルシーンの初期化、フラグリセット等
+				titleScene->sceneReset();
+			}
 			break;
 		case SceneType::kGamePlay:
+			// ゲームシーンの毎フレーム処理
+			gameScene->Update();
+			
+			if (gameScene->IsSceneEnd()) {
+				// 次のシーンの値を代入してシーン切り替え
+				sceneNo = gameScene->NextScene();
+
+				// ゲームシーンの初期化、フラグリセット等
+				gameScene->sceneReset();
+			}
+			break;
+		}
+
+			// 軸表示の更新
+			axisIndicator->Update();
+			// ImGui受付終了
+			imguiManager->End();
+
+			// 描画開始
+			dxCommon->PreDraw();
+
 			gameScene->Draw();
-			break;
-		case SceneType::kGameClear:
-			gameClearScene->Draw();
-			break;
-		}*/
-		// 軸表示の描画
-		axisIndicator->Draw();
-		// プリミティブ描画のリセット
-		primitiveDrawer->Reset();
-		// ImGui描画
-		imguiManager->Draw();
-		// 描画終了
-		dxCommon->PostDraw();
-	}
 
-	// 各種解放
-	delete gameScene;
-	audio->Finalize();
-	// ImGui解放
-	imguiManager->Finalize();
+			switch (sceneNo) {
+			case SceneType::kTitle:
+				titleScene->Draw();
+				break;
+			case SceneType::kGamePlay:
+				gameScene->Draw();
+				break;
+			}
+			// 軸表示の描画
+			axisIndicator->Draw();
+			// プリミティブ描画のリセット
+			primitiveDrawer->Reset();
+			// ImGui描画
+			imguiManager->Draw();
+			// 描画終了
+			dxCommon->PostDraw();
+		}
 
-	// ゲームウィンドウの破棄
-	win->TerminateGameWindow();
+		// 各種解放
+		delete gameScene;
+		audio->Finalize();
+		// ImGui解放
+		imguiManager->Finalize();
 
-	return 0;
+		// ゲームウィンドウの破棄
+		win->TerminateGameWindow();
+
+		return 0;
 }
