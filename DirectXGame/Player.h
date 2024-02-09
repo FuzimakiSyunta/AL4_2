@@ -13,15 +13,23 @@ public:
 	/// </summary>
 	void Initialize(const std::vector<Model*>& models)override;
 
+	void GameRoopInitialize();
+
 	/// <summary>
 	/// 更新
 	/// </summary>
 	void Update()override;
 
 	/// <summary>
+	/// 更新
+	/// </summary>
+	void StartSceneUpdate();
+	
+	/// <summary>
 	/// 描画
 	/// </summary>
 	void Draw(const ViewProjection& viewProjection)override;
+
 
 	WorldTransform& GetWorldTransform() {
 		return worldTransform_;
@@ -54,7 +62,9 @@ public:
 	//中心座標を取得
 	Vector3 GetCenterPosition() const override;
 
-	bool SetClearCount() { return Count_; }
+	int SetClearCount() { return Count_; }
+
+	/*int SetCount*/
 
 private:
 	Behavior behavior_ = Behavior::kRoot;
@@ -79,8 +89,13 @@ private:
 	bool isHammerDraw_;
 	bool isHammerSet_;
 	int stanbyTime;
-	int Count_;
 	
 	Vector3 velocity_ = {};
 
+	/// <summary>
+	/// ポイントのカウント
+	/// </summary>
+	int Count_;
+
+	
 };

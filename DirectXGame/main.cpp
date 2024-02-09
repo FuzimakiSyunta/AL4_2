@@ -84,6 +84,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		switch (sceneNo) {
 		case SceneType::kTitle:
 			titleScene->Update();
+			gameScene->TitleUpdate();
+			
 
 			if (titleScene->IsSceneEnd()) {
 				// 次のシーンの値を代入してシーン切り替え
@@ -115,10 +117,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			// 描画開始
 			dxCommon->PreDraw();
 
-			gameScene->Draw();
-
 			switch (sceneNo) {
 			case SceneType::kTitle:
+				gameScene->TitleDraw();
 				titleScene->Draw();
 				break;
 			case SceneType::kGamePlay:

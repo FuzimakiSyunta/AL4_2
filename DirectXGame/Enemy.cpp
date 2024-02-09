@@ -52,8 +52,8 @@ void Enemy::Update() {
 void Enemy::Draw(const ViewProjection& viewProjection) {
 	// 3Dモデルを描画
 	models_[0]->Draw(worldTransformBody_, viewProjection);
-	models_[1]->Draw(worldTransformL_arm, viewProjection);
-	models_[2]->Draw(worldTransformR_arm, viewProjection);
+	/*models_[1]->Draw(worldTransformL_arm, viewProjection);
+	models_[2]->Draw(worldTransformR_arm, viewProjection);*/
 }
 
 Vector3 Enemy::GetCenterPosition() const { 

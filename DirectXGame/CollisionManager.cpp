@@ -20,6 +20,7 @@ void CollisionManager::ChackAllCollisions() {
 			Collider* colliderB = *itrB;
 			// ペアの当たり判定
 			CheckCollisionPair(colliderA, colliderB);
+		
 		}
 	}
 }

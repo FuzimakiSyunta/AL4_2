@@ -58,6 +58,7 @@ void GameScene::Initialize() {
 	    modelFighterR_arm_.get(), modelHummer_.get()};
 	// 自キャラの初期化
 	player_->Initialize(playerModels);
+	
 
 	// 敵キャラモデル
 	std::vector<Model*> enemyModels = {
@@ -78,6 +79,12 @@ void GameScene::Initialize() {
 	// 地面の初期化
 	ground_->Initialize(groundModel_.get());
 
+		// テクスチャ
+	uint32_t textureClear = TextureManager::Load("Clear.png");
+	// スプライト生成
+	spriteClear_ =
+	    Sprite::Create(textureClear, {0.0f, 0.0f}, {1.0f, 1.0f, 1.0f, 1.0f}, {0.0f, 0.0f});
+
 	//衝突マネージャの生成
 	collisionManager_ = std::make_unique<CollisionManager>();
 
@@ -85,6 +92,28 @@ void GameScene::Initialize() {
 	uint32_t fadeTexHandle = TextureManager::Load("fade.png");
 	fadeSprite_ = Sprite::Create(fadeTexHandle, {0,0});
 	isFade_ = true;
+	isGameStart = true;
+	//クリア
+	isClear_ = false;
+}
+
+void GameScene::RoopInitialize() {
+	// 3Dモデル生成
+	model_.reset(Model::Create());
+	// ワールドトランスフォームの初期化
+	worldTransform_.Initialize();
+	// ビュープロジェクションの初期化
+	viewProjection_.Initialize();
+	// 自キャラの初期化
+	player_->GameRoopInitialize();
+	// 地面の初期化
+	ground_->Initialize(groundModel_.get());
+	//フェード
+	isFade_ = true;
+	//ゲームスタート
+	isGameStart = true;
+	//
+	isClear_ = false;
 }
 
 void GameScene::Update() {
@@ -96,8 +125,11 @@ void GameScene::Update() {
 			isFade_ = false;
 		}
 	} else {
-		player_->Update();
-		enemy_->Update();
+		if (isGameStart == true) {
+			player_->Update();
+			enemy_->Update();
+		}
+		
 	}
 	debugCamera_->Update();
 	ground_->Update();
@@ -109,7 +141,23 @@ void GameScene::Update() {
 	viewProjection_.matProjection = followCamera_->GetViewProjection().matProjection;
 	viewProjection_.matView = followCamera_->GetViewProjection().matView;
 
+	
 	ChackAllCollisions();
+	//10回当たったらクリア
+	if (player_->SetClearCount()>=10) {
+		isClear_ = true;
+		// ゲームパッドの状態を得る変数
+		XINPUT_STATE joyState;
+		if (Input::GetInstance()->GetJoystickState(0, joyState)) {
+			if (joyState.Gamepad.wButtons == XINPUT_GAMEPAD_B&& isClear_ == true) {
+				// タイトルに戻す
+				isSceneEnd = true;
+			}
+		}
+	}
+
+	
+	
 	
 
 #ifdef _DEBUG
@@ -138,6 +186,25 @@ void GameScene::ChackAllCollisions() {
 
 	//衝突判定と応答
 	collisionManager_->ChackAllCollisions();
+}
+
+
+void GameScene::TitleUpdate() {
+	if (isGameStart == true) {
+		player_->StartSceneUpdate();
+	}
+}
+
+void GameScene::TitleDraw() {
+	// コマンドリストの取得
+	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
+	// 3Dオブジェクト描画前処理
+	Model::PreDraw(commandList);
+
+	player_->Draw(viewProjection_);
+
+	// 3Dオブジェクト描画後処理
+	Model::PostDraw();
 }
 
 void GameScene::Draw() {
@@ -184,8 +251,13 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
-
-	fadeSprite_->Draw();
+	if (isGameStart == true) {
+		fadeSprite_->Draw();
+	}
+	if (isClear_==true) {
+		spriteClear_->Draw();
+	}
+	
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
@@ -193,14 +265,11 @@ void GameScene::Draw() {
 #pragma endregion
 
 }
+
 void GameScene::sceneReset() {
-	// ゲームパッドの状態を得る変数
-	XINPUT_STATE joyState;
-	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
-		if (joyState.Gamepad.wButtons == XINPUT_GAMEPAD_A) {
-			isSceneEnd = true;
-		}
-	}
+	// シーンの切り替えフラグ
+	isSceneEnd = false;
+	RoopInitialize();
 }
 
 

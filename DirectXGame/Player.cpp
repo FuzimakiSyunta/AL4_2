@@ -1,6 +1,7 @@
 ﻿#include "Player.h"
 #include"Keisan.h"
 #include"ImGuiManager.h"
+#include <Sprite.h>
 
 
 void Player::Initialize(const std::vector<Model*>& models) {
@@ -24,7 +25,7 @@ void Player::Initialize(const std::vector<Model*>& models) {
 	// 場所の初期化
 	worldTransform_.scale_ = {1.0f, 1.0f, 1.0f};
 	worldTransform_.rotation_ = {0.0f, 0.0f, 0.0f};
-	worldTransform_.translation_ = {0.0f, 0.0f, 0.0f};
+	worldTransform_.translation_ = {0.0f, -2.0f, 0.0f};
 	//体の初期化
 	worldTransformBody_.scale_ = {1.0f, 1.0f, 1.0f};
 	worldTransformBody_.rotation_ = {0.0f, 0.0f, 0.0f};
@@ -45,8 +46,51 @@ void Player::Initialize(const std::vector<Model*>& models) {
 	worldTransformHammer_.scale_ = {1.0f, 1.0f, 1.0f};
 	worldTransformHammer_.rotation_ = {0.0f, 0.0f, 0.0f};
 	worldTransformHammer_.translation_ = {0.0f, 1.0f, 0.0f};
-	//カウンターの初期化
+
+	//ぶつかったカウント
 	Count_ = 0;
+}
+
+void Player::GameRoopInitialize() {
+	
+	// 初期化
+	worldTransform_.Initialize();
+	worldTransformBody_.Initialize();
+	worldTransformHead_.Initialize();
+	worldTransformL_arm.Initialize();
+	worldTransformR_arm.Initialize();
+	worldTransformHammer_.Initialize();
+	// 場所の初期化
+	worldTransform_.scale_ = {1.0f, 1.0f, 1.0f};
+	worldTransform_.rotation_ = {0.0f, 0.0f, 0.0f};
+	worldTransform_.translation_ = {0.0f, 0.0f, -3.0f};
+	// 体の初期化
+	worldTransformBody_.scale_ = {1.0f, 1.0f, 1.0f};
+	worldTransformBody_.rotation_ = {0.0f, 0.0f, 0.0f};
+	worldTransformBody_.translation_ = {0.0f, 0.0f, 0.0f};
+	// 頭の初期化
+	worldTransformHead_.scale_ = {1.0f, 1.0f, 1.0f};
+	worldTransformHead_.rotation_ = {0.0f, 0.0f, 0.0f};
+	worldTransformHead_.translation_ = {0.0f, 1.5f, 0.0f};
+	// 左腕の初期化
+	worldTransformL_arm.scale_ = {1.0f, 1.0f, 1.0f};
+	worldTransformL_arm.rotation_ = {0.0f, 0.0f, 0.0f};
+	worldTransformL_arm.translation_ = {-0.5f, 1.25f, 0.0f};
+	// 右腕の初期化
+	worldTransformR_arm.scale_ = {1.0f, 1.0f, 1.0f};
+	worldTransformR_arm.rotation_ = {0.0f, 0.0f, 0.0f};
+	worldTransformR_arm.translation_ = {0.5f, 1.25f, 0.0f};
+	// ハンマーの初期化
+	worldTransformHammer_.scale_ = {1.0f, 1.0f, 1.0f};
+	worldTransformHammer_.rotation_ = {0.0f, 0.0f, 0.0f};
+	worldTransformHammer_.translation_ = {0.0f, 1.0f, 0.0f};
+
+	isHammerDraw_ = false;
+	isHammerSet_ = false;
+	stanbyTime = 0;
+	// ぶつかったカウント
+	Count_ = 0;
+
 }
 
 void Player::Update()
@@ -104,13 +148,7 @@ void Player::Update()
 	    worldTransform_.translation_.x, worldTransform_.translation_.y,
 	    worldTransform_.translation_.z};
 
-	// 画面の座標を表示
-	ImGui::Begin("Player");
-	ImGui::SliderFloat3("playerRot", playerRot, -28.0f, 28.0f);
-	ImGui::SliderFloat3("playerPos", playerPos, -28.0f, 28.0f);
-	ImGui::Text("%d\n", behaviorRequest_);
-	ImGui::Text("%d\n", Count_);
-	ImGui::End();
+	
 
 	worldTransform_.translation_.x = playerPos[0];
 	worldTransform_.translation_.y = playerPos[1];
@@ -119,6 +157,37 @@ void Player::Update()
 	worldTransform_.rotation_.x = playerRot[0];
 	worldTransform_.rotation_.y = playerRot[1];
 	worldTransform_.rotation_.z = playerRot[2];
+
+#ifdef _DEBUG
+	// 画面の座標を表示
+	ImGui::Begin("Count");
+	ImGui::Text("%d\n", Count_);
+	ImGui::End();
+#endif !_DEBUG
+}
+
+void Player::StartSceneUpdate() { 
+	worldTransformBody_.parent_ = &worldTransform_;
+	worldTransformHead_.parent_ = &worldTransformBody_;
+	worldTransformR_arm.parent_ = &worldTransformBody_;
+	worldTransformL_arm.parent_ = &worldTransformBody_;
+	worldTransformHammer_.parent_ = &worldTransformBody_;
+
+	BaseCharacter::Update();
+
+	// 行列の更新
+	worldTransform_.UpdateMatrix();
+	worldTransformBody_.UpdateMatrix();
+	worldTransformHead_.UpdateMatrix();
+	worldTransformL_arm.UpdateMatrix();
+	worldTransformR_arm.UpdateMatrix();
+	worldTransformHammer_.UpdateMatrix();
+
+	worldTransform_.translation_.z = -40.0f;
+	
+	worldTransform_.rotation_.y += 0.50f; 
+
+	UpdateFloatingGimmick();
 }
 
 void Player::InitializeFloatingGimmick() { 
@@ -126,7 +195,7 @@ void Player::InitializeFloatingGimmick() {
 
 void Player::UpdateFloatingGimmick() {
 	//浮遊移動のサイクル<frame>
-	const float Period = 120.0f;
+	const float Period =22.0f;
 	//1フレームでのパラメータ加算値
 	const float Step = 2.0f * (float)M_PI / (float)Period;
 	//パラメータを1ステップ分加算
@@ -134,7 +203,7 @@ void Player::UpdateFloatingGimmick() {
 	//2πwを超えたら0に戻す
 	floatingParameter_ = std::fmod(floatingParameter_,2.0f*(float)M_PI);
 	//浮遊の振幅
-	const float Amplitude = 0.1f;
+	const float Amplitude = 0.4f;
 	//浮遊を座標に反映
 	worldTransform_.translation_.y = std::sin(floatingParameter_) * Amplitude;
 	const float amplitube = 0.1f;
@@ -151,7 +220,7 @@ void Player::BehaviorRootUpdate() {
 
 	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
 		// 速さ
-		const float speed = 0.3f;
+		const float speed = 0.8f;
 
 		// 移動量
 		velocity_ = {
@@ -171,11 +240,11 @@ void Player::BehaviorRootUpdate() {
 
 	}
 
-	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
+	/*if (Input::GetInstance()->GetJoystickState(0, joyState)) {
 		if (joyState.Gamepad.wButtons == XINPUT_GAMEPAD_B) {
 			behaviorRequest_ = Behavior::kAttack;
 		}
-	}
+	}*/
 		
 
 	UpdateFloatingGimmick();
@@ -233,9 +302,13 @@ void Player::BehaviorJumpInitialize() {
 
 }
 void Player::OnCollision() { 
-	Count_++;
-	
+	isHammerDraw_ = false;
+	isHammerSet_ = false;
+	stanbyTime = 0;
+	// カウントを増やす
+	Count_ += 1;
 	behaviorRequest_ = Behavior::kJump; 
+	worldTransform_.translation_.z = -30.0f;
 }
 
 void Player::BehaviorJumpUpdate() { 

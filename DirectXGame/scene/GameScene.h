@@ -37,20 +37,28 @@ public: // メンバ関数
 	/// </summary>
 	void Initialize();
 
+	void RoopInitialize();
+
 	/// <summary>
 	/// 毎フレーム処理
 	/// </summary>
 	void Update();
+
+
+	/// <summary>
+	/// 毎フレーム処理
+	/// </summary>
+	void TitleUpdate();
 
 	/// <summary>
 	/// 描画
 	/// </summary>
 	void Draw();
 
+	void TitleDraw();
+
 	void ChackAllCollisions();
 
-	
-	bool GetIsClear() { return isClear; }
 
 	// シーンのリセット
 	void sceneReset();
@@ -70,8 +78,6 @@ private: // メンバ変数
 	ViewProjection viewProjection_;
 
 	bool updateFlag = true;
-
-	bool isClear=false;
 
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
@@ -122,8 +128,10 @@ private: // メンバ変数
 	Sprite* fadeSprite_ = nullptr;
 	Vector4 fadeColor_ = {1.0f, 1.0f, 1.0f, 1.0f};
 	bool isFade_;
-
-	/// <summary>
-	/// ゲームシーン用
-	/// </summary>
+	//ゲームスタート
+	bool isGameStart;
+	//クリア画面
+	bool isClear_;
+	// スプライト
+	Sprite* spriteClear_ = nullptr; // タイトル
 };

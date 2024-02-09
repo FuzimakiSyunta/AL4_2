@@ -1,13 +1,18 @@
 ﻿#pragma once
 #include "Audio.h"
+#include "DebugCamera.h"
 #include "DirectXCommon.h"
 #include "Input.h"
 #include "Model.h"
 #include "SafeDelete.h"
-#include "Scene.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
+#include "CollisionManager.h"
+#include <Scene.h>
+#include <GameScene.h>
+
+
 
 class TitleScene {
 public:
@@ -46,6 +51,9 @@ public:
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
+	
+	ViewProjection viewProjection;
+
 	/*Audio* audio_ = nullptr;*/
 
 	// BGM

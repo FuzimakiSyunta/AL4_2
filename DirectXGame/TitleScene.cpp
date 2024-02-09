@@ -1,5 +1,6 @@
 ﻿#include "TitleScene.h"
 
+
 TitleScene::TitleScene() {}
 
 TitleScene::~TitleScene() { delete spriteTitle_; }
@@ -18,9 +19,11 @@ void TitleScene::Initialize() {
 	spriteTitle_ =
 	    Sprite::Create(textureTitle, {0.0f, 0.0f}, {1.0f, 1.0f, 1.0f, 1.0f}, {0.0f, 0.0f});
 
+
 	// BGM
 	/*bgmDataHandle_ = audio_->LoadWave("BGM/BGM.mp3");
 	bgmHandle_ = audio_->PlayWave(bgmDataHandle_, false, 0.15f);*/
+	
 }
 
 void TitleScene::Update() {
@@ -54,11 +57,7 @@ void TitleScene::Draw() {
 #pragma region 3Dオブジェクト描画
 	// 3Dオブジェクト描画前処理
 	Model::PreDraw(commandList);
-
-	/// <summary>
-	/// ここに3Dオブジェクトの描画処理を追加できる
-	/// </summary>
-
+	
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
 #pragma endregion
