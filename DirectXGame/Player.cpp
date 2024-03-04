@@ -1,6 +1,7 @@
 ﻿#include "Player.h"
 #include"Keisan.h"
 #include"ImGuiManager.h"
+#include "../External/imgui/imgui.h"
 
 
 void Player::Initialize(const std::vector<Model*>& models) {
