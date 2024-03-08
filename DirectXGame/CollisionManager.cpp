@@ -22,6 +22,7 @@ void CollisionManager::ChackAllCollisions() {
 			CheckCollisionPair(colliderA, colliderB);
 		}
 	}
+	
 }
 
 void CollisionManager::CheckCollisionPair(Collider* colliderA, Collider* colliderB) {

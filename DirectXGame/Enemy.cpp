@@ -19,11 +19,11 @@ void Enemy::Initialize(const std::vector<Model*>& models) {
 	// 左腕の初期化
 	worldTransformL_arm.scale_ = {1.0f, 1.0f, 1.0f};
 	worldTransformL_arm.rotation_ = {0.0f, 0.0f, 0.0f};
-	worldTransformL_arm.translation_ = {-0.5f, 1.25f, 0.0f};
+	worldTransformL_arm.translation_ = {-10.55f, 1.25f, 0.0f};
 	// 右腕の初期化
 	worldTransformR_arm.scale_ = {1.0f, 1.0f, 1.0f};
 	worldTransformR_arm.rotation_ = {0.0f, 0.0f, 0.0f};
-	worldTransformR_arm.translation_ = {0.5f, 1.25f, 0.0f};
+	worldTransformR_arm.translation_ = {10.55f, 1.25f, 0.0f};
 }
 
 void Enemy::Update() {
@@ -34,13 +34,13 @@ void Enemy::Update() {
 	worldTransformL_arm.parent_ = &worldTransform_;
 	worldTransformR_arm.parent_ = &worldTransform_;
 	// 速度
-	Vector3 move = {0, 0, 1};
+	Vector3 move = {0, 0, 0};
 	
 	move = TransformNormal(move,worldTransform_.matWorld_);
 
 	worldTransform_.translation_ = Add(worldTransform_.translation_, move);
 
-	worldTransform_.rotation_.y += 0.05f;
+	/*worldTransform_.rotation_.y += 0.05f;*/
 
 	// 行列の更新
 	worldTransform_.UpdateMatrix();
